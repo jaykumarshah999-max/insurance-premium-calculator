@@ -1,108 +1,588 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Insurance Premium Calculator</title>
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
 <style>
-body{
-font-family:Arial,sans-serif;
-background:#f4f6f9;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-margin:0;
+:root {
+  --bg: #f8f9fc;
+  --card: #ffffff;
+  --text: #1a1a2e;
+  --muted: #64748b;
+  --border: rgba(0,0,0,0.1);
+  --accent: #1e3a8a;
+  --accent2: #3b82f6;
+  --input-bg: #f1f5f9;
+  --input-border: #cbd5e1;
+  --result-bg: #eff6ff;
+  --result-border: #bfdbfe;
+  --tag-bg: #e0f2fe;
+  --tag-text: #0369a1;
+  --shadow: 0 4px 24px rgba(30,58,138,0.10);
+  --glow: none;
+  --btn-shadow: 0 2px 8px rgba(30,58,138,0.18);
+}
+[data-theme="dark"] {
+  --bg: #0f172a;
+  --card: #1e293b;
+  --text: #f1f5f9;
+  --muted: #94a3b8;
+  --border: rgba(255,255,255,0.07);
+  --accent: #3b82f6;
+  --accent2: #60a5fa;
+  --input-bg: #0f172a;
+  --input-border: #334155;
+  --result-bg: #1e293b;
+  --result-border: #334155;
+  --tag-bg: #1e3a5f;
+  --tag-text: #93c5fd;
+  --shadow: 0 4px 32px rgba(0,0,0,0.45);
+  --glow: none;
+  --btn-shadow: 0 2px 16px rgba(59,130,246,0.25);
+}
+[data-theme="neon"] {
+  --bg: #050712;
+  --card: #0d0d1a;
+  --text: #e0e0ff;
+  --muted: #a0a0cc;
+  --border: rgba(100,100,255,0.18);
+  --accent: #7c3aed;
+  --accent2: #a855f7;
+  --input-bg: #10101e;
+  --input-border: rgba(139,92,246,0.4);
+  --result-bg: #0d0d1a;
+  --result-border: rgba(139,92,246,0.5);
+  --tag-bg: rgba(139,92,246,0.12);
+  --tag-text: #c084fc;
+  --shadow: 0 0 40px rgba(124,58,237,0.25);
+  --glow: 0 0 12px rgba(168,85,247,0.6), 0 0 32px rgba(124,58,237,0.3);
+  --btn-shadow: 0 0 20px rgba(124,58,237,0.55);
 }
 
-.container{
-background:white;
-padding:30px;
-border-radius:15px;
-box-shadow:0 0 20px rgba(0,0,0,0.1);
-width:400px;
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  transition: background 0.35s;
 }
 
-h1{
-text-align:center;
-color:#1e3a8a;
+.card {
+  background: var(--card);
+  border: 0.5px solid var(--border);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  padding: 2rem 2rem 1.75rem;
+  width: 100%;
+  max-width: 420px;
+  transition: background 0.35s, box-shadow 0.35s;
 }
 
-label{
-font-weight:bold;
+[data-theme="neon"] .card {
+  border: 1px solid rgba(139,92,246,0.3);
+  box-shadow: 0 0 60px rgba(124,58,237,0.15), 0 0 120px rgba(124,58,237,0.07);
 }
 
-input{
-width:100%;
-padding:12px;
-margin-top:5px;
-margin-bottom:15px;
-border:1px solid #ccc;
-border-radius:8px;
+.theme-bar {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 1.5rem;
+  background: var(--input-bg);
+  border-radius: 12px;
+  padding: 4px;
+  border: 0.5px solid var(--border);
 }
 
-button{
-width:100%;
-padding:12px;
-background:#1e3a8a;
-color:white;
-border:none;
-border-radius:8px;
-font-size:16px;
-cursor:pointer;
+.theme-btn {
+  flex: 1;
+  padding: 7px 0;
+  border: none;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  background: transparent;
+  color: var(--muted);
+  transition: all 0.22s;
+  letter-spacing: 0.02em;
 }
 
-button:hover{
-opacity:0.9;
+.theme-btn.active {
+  background: var(--card);
+  color: var(--text);
+  box-shadow: 0 1px 6px rgba(0,0,0,0.10);
 }
 
-#result{
-margin-top:20px;
-text-align:center;
-font-size:22px;
-font-weight:bold;
-color:green;
+[data-theme="neon"] .theme-btn.active {
+  background: rgba(139,92,246,0.18);
+  color: #c084fc;
+  box-shadow: 0 0 10px rgba(168,85,247,0.2);
 }
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 0.25rem;
+}
+
+.logo-icon {
+  width: 38px;
+  height: 38px;
+  background: var(--accent);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: var(--glow);
+}
+
+[data-theme="neon"] .logo-icon {
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+}
+
+.logo-icon i {
+  font-size: 20px;
+  color: #fff;
+}
+
+.title-area h1 {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.2;
+}
+
+.title-area p {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 1px;
+}
+
+.tags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 1rem 0 1.5rem;
+}
+
+.tag {
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: var(--tag-bg);
+  color: var(--tag-text);
+}
+
+[data-theme="neon"] .tag {
+  border: 0.5px solid rgba(139,92,246,0.3);
+  box-shadow: 0 0 6px rgba(168,85,247,0.12);
+}
+
+.divider {
+  height: 0.5px;
+  background: var(--border);
+  margin: 0 0 1.5rem;
+}
+
+.field {
+  margin-bottom: 1.1rem;
+}
+
+.field label {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+  margin-bottom: 6px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.input-wrap {
+  position: relative;
+}
+
+.input-wrap i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: var(--muted);
+  pointer-events: none;
+}
+
+.field input,
+.field select {
+  width: 100%;
+  background: var(--input-bg);
+  border: 0.5px solid var(--input-border);
+  border-radius: 10px;
+  padding: 11px 14px 11px 38px;
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
+  font-family: inherit;
+}
+
+.field input:focus,
+.field select:focus {
+  border-color: var(--accent2);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.12);
+}
+
+[data-theme="neon"] .field input:focus,
+[data-theme="neon"] .field select:focus {
+  border-color: #a855f7;
+  box-shadow: 0 0 0 3px rgba(168,85,247,0.18), 0 0 10px rgba(168,85,247,0.2);
+}
+
+.field input::placeholder {
+  color: var(--muted);
+  opacity: 0.6;
+}
+
+.row2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.calc-btn {
+  width: 100%;
+  padding: 13px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 0.25rem;
+  box-shadow: var(--btn-shadow);
+  transition: opacity 0.18s, transform 0.14s, box-shadow 0.18s;
+  letter-spacing: 0.01em;
+  font-family: inherit;
+}
+
+.calc-btn:hover { opacity: 0.92; transform: translateY(-1px); }
+.calc-btn:active { transform: scale(0.98); }
+
+[data-theme="neon"] .calc-btn {
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+  box-shadow: 0 0 20px rgba(168,85,247,0.5), 0 0 40px rgba(124,58,237,0.25);
+}
+
+[data-theme="neon"] .calc-btn:hover {
+  box-shadow: 0 0 30px rgba(168,85,247,0.65), 0 0 60px rgba(124,58,237,0.35);
+}
+
+.result-box {
+  margin-top: 1.25rem;
+  background: var(--result-bg);
+  border: 0.5px solid var(--result-border);
+  border-radius: 14px;
+  padding: 1.2rem 1.25rem 1rem;
+  display: none;
+  transition: background 0.3s;
+}
+
+[data-theme="neon"] .result-box {
+  border: 1px solid rgba(139,92,246,0.35);
+  background: rgba(124,58,237,0.06);
+  box-shadow: 0 0 20px rgba(124,58,237,0.1);
+}
+
+.result-box.show { display: block; }
+
+.result-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.result-amount {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--accent2);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+[data-theme="neon"] .result-amount {
+  color: #c084fc;
+  text-shadow: 0 0 18px rgba(192,132,252,0.5);
+}
+
+.result-sub {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.breakdown {
+  margin-top: 1rem;
+  border-top: 0.5px solid var(--border);
+  padding-top: 0.9rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.bk-item {
+  background: var(--card);
+  border: 0.5px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+}
+
+[data-theme="neon"] .bk-item {
+  background: rgba(139,92,246,0.07);
+  border-color: rgba(139,92,246,0.2);
+}
+
+.bk-label { font-size: 11px; color: var(--muted); }
+
+.bk-val {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  margin-top: 2px;
+}
+
+.risk-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 9px;
+  border-radius: 20px;
+  margin-top: 8px;
+}
+
+.risk-low    { background: #dcfce7; color: #15803d; }
+.risk-medium { background: #fef9c3; color: #a16207; }
+.risk-high   { background: #fee2e2; color: #b91c1c; }
+
+[data-theme="dark"] .risk-low    { background: rgba(21,128,61,0.18);  color: #86efac; }
+[data-theme="dark"] .risk-medium { background: rgba(161,98,7,0.18);   color: #fde047; }
+[data-theme="dark"] .risk-high   { background: rgba(185,28,28,0.18);  color: #fca5a5; }
+
+[data-theme="neon"] .risk-low    { background: rgba(21,128,61,0.15);   color: #4ade80; box-shadow: 0 0 8px rgba(74,222,128,0.2); }
+[data-theme="neon"] .risk-medium { background: rgba(234,179,8,0.12);   color: #facc15; box-shadow: 0 0 8px rgba(250,204,21,0.2); }
+[data-theme="neon"] .risk-high   { background: rgba(239,68,68,0.12);   color: #f87171; box-shadow: 0 0 8px rgba(248,113,113,0.2); }
+
+.error-msg {
+  display: none;
+  margin-top: 0.75rem;
+  font-size: 13px;
+  color: #dc2626;
+  background: #fee2e2;
+  padding: 9px 14px;
+  border-radius: 8px;
+  align-items: center;
+  gap: 6px;
+}
+
+[data-theme="dark"] .error-msg { background: rgba(220,38,38,0.13); color: #fca5a5; }
+[data-theme="neon"] .error-msg { background: rgba(239,68,68,0.10); color: #f87171; }
+
+.error-msg.show { display: flex; }
+
+.footer-note {
+  margin-top: 1.25rem;
+  font-size: 11px;
+  color: var(--muted);
+  text-align: center;
+  opacity: 0.7;
+}
+
+select option { background: var(--card); color: var(--text); }
 </style>
 </head>
+<body data-theme="light">
 
-<body>
+<div class="card">
 
-<div class="container">
+  <div class="theme-bar" role="group" aria-label="Theme selector">
+    <button class="theme-btn active" onclick="setTheme('light', this)">☀ Light</button>
+    <button class="theme-btn" onclick="setTheme('dark', this)">🌙 Dark</button>
+    <button class="theme-btn" onclick="setTheme('neon', this)">⚡ Neon</button>
+  </div>
 
-<h1>Insurance Premium Calculator</h1>
+  <div class="header">
+    <div class="logo-icon">
+      <i class="ti ti-shield-check"></i>
+    </div>
+    <div class="title-area">
+      <h1>Insurance Premium Calculator</h1>
+      <p>Instant estimate · India health plans</p>
+    </div>
+  </div>
 
-<label>Age</label>
-<input type="number" id="age" placeholder="Enter Age">
+  <div class="tags">
+    <span class="tag">Health</span>
+    <span class="tag">Term Life</span>
+    <span class="tag">Family Floater</span>
+  </div>
 
-<label>Sum Insured (₹)</label>
-<input type="number" id="suminsured" placeholder="Enter Coverage Amount">
+  <div class="divider"></div>
 
-<button onclick="calculatePremium()">
-Calculate Premium
-</button>
+  <div class="field">
+    <label for="age">Age</label>
+    <div class="input-wrap">
+      <i class="ti ti-user"></i>
+      <input type="number" id="age" placeholder="e.g. 32" min="1" max="99" />
+    </div>
+  </div>
 
-<div id="result"></div>
+  <div class="field">
+    <label for="suminsured">Sum insured (₹)</label>
+    <div class="input-wrap">
+      <i class="ti ti-currency-rupee"></i>
+      <input type="number" id="suminsured" placeholder="e.g. 500000" min="0" />
+    </div>
+  </div>
 
+  <div class="row2">
+    <div class="field">
+      <label for="plan">Plan type</label>
+      <div class="input-wrap">
+        <i class="ti ti-list"></i>
+        <select id="plan">
+          <option value="1.0">Individual</option>
+          <option value="1.15">Family floater</option>
+          <option value="0.9">Senior citizen</option>
+          <option value="0.85">Group policy</option>
+        </select>
+      </div>
+    </div>
+    <div class="field">
+      <label for="smoker">Smoker</label>
+      <div class="input-wrap">
+        <i class="ti ti-heart"></i>
+        <select id="smoker">
+          <option value="1.0">Non-smoker</option>
+          <option value="1.25">Smoker</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <button class="calc-btn" onclick="calculate()">
+    <i class="ti ti-calculator"></i>
+    Calculate Premium
+  </button>
+
+  <div class="error-msg" id="errMsg" role="alert">
+    <i class="ti ti-alert-circle"></i>
+    <span id="errTxt">Please enter a valid age (1–99) and sum insured.</span>
+  </div>
+
+  <div class="result-box" id="resultBox" role="region" aria-live="polite">
+    <div class="result-label">Estimated annual premium</div>
+    <div class="result-amount" id="resultAmt">₹0</div>
+    <div class="result-sub" id="resultSub">Monthly equivalent: ₹0</div>
+    <span class="risk-badge" id="riskBadge"></span>
+
+    <div class="breakdown">
+      <div class="bk-item">
+        <div class="bk-label">Base premium</div>
+        <div class="bk-val" id="bkBase">—</div>
+      </div>
+      <div class="bk-item">
+        <div class="bk-label">Age loading</div>
+        <div class="bk-val" id="bkAge">—</div>
+      </div>
+      <div class="bk-item">
+        <div class="bk-label">Plan multiplier</div>
+        <div class="bk-val" id="bkPlan">—</div>
+      </div>
+      <div class="bk-item">
+        <div class="bk-label">Smoker loading</div>
+        <div class="bk-val" id="bkSmoke">—</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="footer-note">Indicative estimate only · Not a formal quotation</p>
 </div>
 
 <script>
-function calculatePremium(){
+  function setTheme(theme, btn) {
+    document.body.dataset.theme = theme;
+    document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
 
-let age=parseInt(document.getElementById("age").value);
-let sum=parseInt(document.getElementById("suminsured").value);
+  function fmt(n) {
+    return '₹' + Math.round(n).toLocaleString('en-IN');
+  }
 
-if(!age || !sum){
-document.getElementById("result").innerHTML=
-"Please fill all fields";
-return;
-}
+  function calculate() {
+    const age      = parseInt(document.getElementById('age').value);
+    const sum      = parseFloat(document.getElementById('suminsured').value);
+    const planMul  = parseFloat(document.getElementById('plan').value);
+    const smokeMul = parseFloat(document.getElementById('smoker').value);
 
-let premium=(sum*0.03)+(age*100);
+    const errBox    = document.getElementById('errMsg');
+    const resultBox = document.getElementById('resultBox');
 
-document.getElementById("result").innerHTML=
-"Estimated Premium: ₹"+premium.toFixed(0);
+    if (!age || !sum || age < 1 || age > 99 || sum <= 0) {
+      errBox.classList.add('show');
+      resultBox.classList.remove('show');
+      return;
+    }
+    errBox.classList.remove('show');
 
-}
+    const base   = sum * 0.03;
+    const agePart = age * 100;
+    const raw    = (base + agePart) * planMul * smokeMul;
+
+    document.getElementById('resultAmt').textContent = fmt(raw);
+    document.getElementById('resultSub').textContent = 'Monthly equivalent: ' + fmt(raw / 12);
+    document.getElementById('bkBase').textContent  = fmt(base);
+    document.getElementById('bkAge').textContent   = fmt(agePart);
+    document.getElementById('bkPlan').textContent  = planMul.toFixed(2) + '×';
+    document.getElementById('bkSmoke').textContent = smokeMul === 1.0 ? 'None' : '+25%';
+
+    const badge = document.getElementById('riskBadge');
+    if (age < 35 && smokeMul === 1.0) {
+      badge.textContent = '✓ Low risk profile';
+      badge.className   = 'risk-badge risk-low';
+    } else if (age >= 55 || smokeMul > 1.0) {
+      badge.textContent = '⚠ High risk profile';
+      badge.className   = 'risk-badge risk-high';
+    } else {
+      badge.textContent = '◆ Moderate risk profile';
+      badge.className   = 'risk-badge risk-medium';
+    }
+
+    resultBox.classList.add('show');
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
 </script>
 
 </body>
