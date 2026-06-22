@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Insurance Premium Calculator</title>
+<style>
+body{
+font-family:Arial;
+max-width:600px;
+margin:auto;
+padding:20px;
+}
+
+input{
+width:100%;
+padding:10px;
+margin:10px 0;
+}
+
+button{
+padding:10px 20px;
+cursor:pointer;
+}
+
+#result{
+margin-top:20px;
+font-size:20px;
+font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Insurance Premium Calculator</h1>
+
+<label>Age</label>
+<input type="number" id="age">
+
+<label>Sum Insured (₹)</label>
+<input type="number" id="suminsured">
+
+<button onclick="calculatePremium()">
+Calculate Premium
+</button>
+
+<div id="result"></div>
+
+<script>
+function calculatePremium(){
+
+let age=parseInt(document.getElementById("age").value);
+let sum=parseInt(document.getElementById("suminsured").value);
+
+if(!age || !sum){
+document.getElementById("result").innerHTML="Please fill all fields";
+return;
+}
+
+let premium=(sum*0.03)+(age*100);
+
+document.getElementById("result").innerHTML=
+"Estimated Premium: ₹"+premium.toFixed(0);
+
+}
+</script>
+
+</body>
+</html>
